@@ -9,6 +9,8 @@ A reusable, accessible toast component for React, styled with TailwindCSS.
 - Auto-close and manual close support
 - Accessible close button
 - TypeScript support
+- Toast manager for stacking notifications
+- Simple imperative API (`toast.success()`, etc.)
 
 ## Installation
 
@@ -24,15 +26,11 @@ npm install @bakemono-san/tailwindcss-react-toast
 
 ## Usage
 
-**1. Import the Toast component:**
+### 1. Basic Toast
 
 ```tsx
 import { Toast } from '@bakemono-san/tailwindcss-react-toast';
-```
 
-**2. Render the Toast:**
-
-```tsx
 <Toast
   type="success"
   title="Success!"
@@ -43,6 +41,42 @@ import { Toast } from '@bakemono-san/tailwindcss-react-toast';
   className="custom-class"
   autoClose
 />
+```
+
+### 2. Toast Manager (Recommended for stacking)
+
+```tsx
+import { ToastManager } from '@bakemono-san/tailwindcss-react-toast';
+
+function App() {
+  return (
+    <>
+      {/* Your app code */}
+      <ToastManager />
+    </>
+  );
+}
+```
+
+### 3. Imperative Toast API
+
+```tsx
+import { toast } from '@bakemono-san/tailwindcss-react-toast';
+
+// Show a success toast
+toast.success('Profile updated!');
+
+// Show an error toast with options
+toast.error('Failed to save.', { title: 'Error', duration: 7000 });
+
+// Show a custom toast
+toast.show({
+  type: 'info',
+  title: 'Heads up',
+  message: 'This is a custom info toast.',
+  duration: 3000,
+  autoClose: true,
+});
 ```
 
 ## Props
@@ -79,4 +113,4 @@ For TailwindCSS v4, add the following to your `styles.css` or `index.css`:
 
 ## License
 
-MIT © bakemono-san
+MIT © bakemono
