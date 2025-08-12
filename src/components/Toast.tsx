@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 /**
  * Defines the visual style and semantic meaning of the toast notification
@@ -110,26 +110,31 @@ export const Toast: React.FC<ToastProps> = ({
   autoClose = true,
 }) => {
   const [isVisible, setIsVisible] = useState(true);
+  const hasClosed = useRef(false);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  useEffect(() => {
-    if (autoClose && duration > 0) {
-      const timer = setTimeout(() => {
-        setIsVisible(false);
-        // Wait for exit animation before calling onClose
-        setTimeout(() => onClose?.(), 300);
-      }, duration);
-      
-      return () => clearTimeout(timer);
-    }
-  }, [autoClose, duration, onClose]);
 
   /**
    * Handles manual closing of the toast with animation
    */
-  const handleClose = () => {
+  const closeToast = () => {
+    if (hasClosed.current) return;
+    hasClosed.current = true;
     setIsVisible(false);
     setTimeout(() => onClose?.(), 300);
   };
+
+  useEffect(() => {
+    if (autoClose && duration > 0) {
+      closeTimeoutRef.current = setTimeout(closeToast, duration);
+    }
+
+    return () => {
+      if (closeTimeoutRef.current) {
+        clearTimeout(closeTimeoutRef.current);
+      }
+    };
+  }, [autoClose, duration]);
 
   /**
    * Returns the appropriate Tailwind CSS classes based on toast type
@@ -186,7 +191,7 @@ export const Toast: React.FC<ToastProps> = ({
         </div>
         {showCloseButton && (
           <button
-            onClick={handleClose}
+            onClick={closeToast}
             className="ml-2 text-gray-400 hover:text-gray-600 transition-colors p-1 -mr-1 -mt-1"
             aria-label="Close notification"
           >
