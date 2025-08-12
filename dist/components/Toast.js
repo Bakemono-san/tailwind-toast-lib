@@ -1,5 +1,5 @@
 import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 /**
  * Toast notification component for displaying temporary messages to users
  *
@@ -45,23 +45,28 @@ import { useState, useEffect } from 'react';
  */
 export const Toast = ({ type = 'info', title, message, duration = 5000, showCloseButton = true, onClose, className = '', autoClose = true, }) => {
     const [isVisible, setIsVisible] = useState(true);
-    useEffect(() => {
-        if (autoClose && duration > 0) {
-            const timer = setTimeout(() => {
-                setIsVisible(false);
-                // Wait for exit animation before calling onClose
-                setTimeout(() => onClose?.(), 300);
-            }, duration);
-            return () => clearTimeout(timer);
-        }
-    }, [autoClose, duration, onClose]);
+    const hasClosed = useRef(false);
+    const closeTimeoutRef = useRef(null);
     /**
      * Handles manual closing of the toast with animation
      */
-    const handleClose = () => {
+    const closeToast = () => {
+        if (hasClosed.current)
+            return;
+        hasClosed.current = true;
         setIsVisible(false);
         setTimeout(() => onClose?.(), 300);
     };
+    useEffect(() => {
+        if (autoClose && duration > 0) {
+            closeTimeoutRef.current = setTimeout(closeToast, duration);
+        }
+        return () => {
+            if (closeTimeoutRef.current) {
+                clearTimeout(closeTimeoutRef.current);
+            }
+        };
+    }, [autoClose, duration]);
     /**
      * Returns the appropriate Tailwind CSS classes based on toast type
      */
@@ -97,5 +102,5 @@ export const Toast = ({ type = 'info', title, message, duration = 5000, showClos
     ${getTypeStyles()}
     ${className}
   `.replace(/\s+/g, ' ').trim();
-    return (_jsx("div", { className: baseClasses, children: _jsxs("div", { className: "flex items-start gap-3", children: [getIcon(), _jsxs("div", { className: "flex-1 min-w-0", children: [title && (_jsx("h4", { className: "font-semibold text-sm leading-5 mb-1", children: title })), _jsx("p", { className: "text-sm leading-5", children: message })] }), showCloseButton && (_jsx("button", { onClick: handleClose, className: "ml-2 text-gray-400 hover:text-gray-600 transition-colors p-1 -mr-1 -mt-1", "aria-label": "Close notification", children: _jsx("svg", { className: "w-4 h-4", fill: "currentColor", viewBox: "0 0 20 20", children: _jsx("path", { fillRule: "evenodd", d: "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z", clipRule: "evenodd" }) }) }))] }) }));
+    return (_jsx("div", { className: baseClasses, children: _jsxs("div", { className: "flex items-start gap-3", children: [getIcon(), _jsxs("div", { className: "flex-1 min-w-0", children: [title && (_jsx("h4", { className: "font-semibold text-sm leading-5 mb-1", children: title })), _jsx("p", { className: "text-sm leading-5", children: message })] }), showCloseButton && (_jsx("button", { onClick: closeToast, className: "ml-2 text-gray-400 hover:text-gray-600 transition-colors p-1 -mr-1 -mt-1", "aria-label": "Close notification", children: _jsx("svg", { className: "w-4 h-4", fill: "currentColor", viewBox: "0 0 20 20", children: _jsx("path", { fillRule: "evenodd", d: "M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z", clipRule: "evenodd" }) }) }))] }) }));
 };

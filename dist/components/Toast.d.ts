@@ -135,4 +135,4 @@ export declare const Toast: React.FC<ToastProps>;
  * - Responsive design (min-width: 20rem, max-width: 28rem)
  * - Smooth CSS transitions for show/hide animations
  * - Consistent spacing and typography
- */ 
+ */

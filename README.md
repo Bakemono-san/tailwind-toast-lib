@@ -99,7 +99,10 @@ Ensure your Tailwind config includes your source files:
 ```js
 // tailwind.config.js
 export default {
-  content: ["./src/**/*.{ts,tsx}"],
+  content: [
+    "./src/**/*.{ts,tsx}",
+    "./node_modules/@bakemono-san/tailwindcss-react-toast/dist/**/*.{js,jsx,ts,tsx}""
+  ],
   theme: { extend: {} },
   plugins: [],
 }

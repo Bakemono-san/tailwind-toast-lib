@@ -30,7 +30,9 @@
     "typescript": "^5.4.0"
   },
   "keywords": [
-    "modal",
+    "toast",
+    "toaster",
+    "alert",
     "react",
     "tailwindcss",
     "component",
