@@ -1,6 +1,6 @@
 {
   "name": "@bakemono-san/tailwindcss-react-toast",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Reusable taost component for React using TailwindCSS",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
