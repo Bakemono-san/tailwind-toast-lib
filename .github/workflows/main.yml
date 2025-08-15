@@ -31,8 +31,8 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
-      - name: Update the verion
-        run: npm version patch
+      - name: Bump package version (patch)
+        run: npm version patch --no-git-tag-version
 
       - name: Publish package
         run: npm publish
