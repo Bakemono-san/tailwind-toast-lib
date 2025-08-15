@@ -8,7 +8,12 @@ export interface ToastItem extends ToastProps {
 
 export let pushToast: (toast: Omit<ToastProps, 'id'>) => void = () => {};
 
-export const ToastManager: React.FC = () => {
+export interface ToastManagerProps {
+  /** Position of the toast container on screen */
+  position?: 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'top-center' | 'bottom-center';
+}
+
+export const ToastManager: React.FC<ToastManagerProps> = ({ position = 'top-right' }) => {
   const [toasts, setToasts] = useState<ToastItem[]>([]);
 
   useEffect(() => {
@@ -22,8 +27,17 @@ export const ToastManager: React.FC = () => {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   };
 
+  const positionClasses = {
+    'top-right': 'top-4 right-4 items-end',
+    'top-left': 'top-4 left-4 items-start',
+    'bottom-right': 'bottom-4 right-4 items-end',
+    'bottom-left': 'bottom-4 left-4 items-start',
+    'top-center': 'top-4 left-1/2 transform -translate-x-1/2 items-center',
+    'bottom-center': 'bottom-4 left-1/2 transform -translate-x-1/2 items-center',
+  };
+
   return (
-    <div className="fixed top-4 right-4 z-50 flex flex-col gap-3 items-end pointer-events-none">
+    <div className={`fixed z-50 flex flex-col gap-3 pointer-events-none ${positionClasses[position]}`}>
       {toasts.map(({ id, ...props }) => (
         <Toast
           key={id}

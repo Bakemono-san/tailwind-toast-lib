@@ -11,6 +11,7 @@ A reusable, accessible toast component for React, styled with TailwindCSS.
 - TypeScript support
 - Toast manager for stacking notifications
 - Simple imperative API (`toast.success()`, etc.)
+- **Configurable toast position via ToastManager**
 
 ## Installation
 
@@ -45,6 +46,8 @@ import { Toast } from '@bakemono-san/tailwindcss-react-toast';
 
 ### 2. Toast Manager (Recommended for stacking)
 
+You can control where toasts appear using the `position` prop:
+
 ```tsx
 import { ToastManager } from '@bakemono-san/tailwindcss-react-toast';
 
@@ -52,7 +55,8 @@ function App() {
   return (
     <>
       {/* Your app code */}
-      <ToastManager />
+      <ToastManager position="top-right" /> {/* Default */}
+      {/* Or use any of: "top-left", "bottom-right", "bottom-left", "top-center", "bottom-center" */}
     </>
   );
 }
@@ -81,6 +85,8 @@ toast.show({
 
 ## Props
 
+### Toast Props
+
 | Name             | Type                                         | Default      | Description                       |
 |------------------|----------------------------------------------|--------------|-----------------------------------|
 | `type`           | `'success' \| 'error' \| 'warning' \| 'info'`| `'info'`     | Toast style/type                  |
@@ -92,6 +98,12 @@ toast.show({
 | `className`      | `string`                                     | `''`         | Additional Tailwind classes       |
 | `autoClose`      | `boolean`                                    | `true`       | Enable auto-close                 |
 
+### ToastManager Props
+
+| Name      | Type                                                                 | Default      | Description                                      |
+|-----------|----------------------------------------------------------------------|--------------|--------------------------------------------------|
+| `position`| `'top-right' \| 'top-left' \| 'bottom-right' \| 'bottom-left' \| 'top-center' \| 'bottom-center'` | `'top-right'` | Position of the toast container on the screen    |
+
 ## TailwindCSS Setup
 
 Ensure your Tailwind config includes your source files:
@@ -101,7 +113,7 @@ Ensure your Tailwind config includes your source files:
 export default {
   content: [
     "./src/**/*.{ts,tsx}",
-    "./node_modules/@bakemono-san/tailwindcss-react-toast/dist/**/*.{js,jsx,ts,tsx}""
+    "./node_modules/@bakemono-san/tailwindcss-react-toast/dist/**/*.{js,jsx,ts,tsx}"
   ],
   theme: { extend: {} },
   plugins: [],
@@ -115,5 +127,3 @@ For TailwindCSS v4, add the following to your `styles.css` or `index.css`:
 ```
 
 ## License
-
-MIT © bakemono
